@@ -5,17 +5,27 @@
 #include "snake.h"
 
 int main() {
-    const size_t size = 20;
-    enum Cells *field = (enum Cells *) calloc(size * size, sizeof(char));
+    const size_t size  = 20;
+    enum Cells  *field = (enum Cells *) calloc(size * size, sizeof(char));
     assert(field != NULL);
+
+    int       Applex = 1;
+    int       Appley = 1;
+    int       Snakex = size / 2;
+    int       Snakey = size / 2;
+    enum Move Snaked = Stop;
     
+    srand(34);
     SetUp(field, size);
     Draw(field, size);
-    /*for (int i = 0; i < 10; i++) {
+    NewApple(field, size, &Applex, &Appley);
+    for (int i = 0; i < 10; i++) {
+        Input(&Snaked);
         printf("\e[1;1H\e[2J");
+        printf("%d\n\r", Snaked);
+        SnakeMove(field, size, &Snakex, &Snakey, &Snaked);
         Draw(field, size);
         sleep(1);
-    }*/
-
-   free(field);
+    }
+    free(field);
 }
