@@ -1,10 +1,12 @@
 #include <assert.h>
+#include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "snake.h"
 
 int main() {
+    initscr();
     const size_t size  = 20;
     enum Cells  *field = (enum Cells *) calloc(size * size, sizeof(char));
     assert(field != NULL);
@@ -21,11 +23,11 @@ int main() {
     NewApple(field, size, &Applex, &Appley);
     for (int i = 0; i < 10; i++) {
         Input(&Snaked);
-        printf("\e[1;1H\e[2J");
-        printf("%d\n\r", Snaked);
+        printw("%d\n\r", Snaked);
         SnakeMove(field, size, &Snakex, &Snakey, &Snaked);
         Draw(field, size);
         sleep(1);
     }
     free(field);
+    endwin();
 }

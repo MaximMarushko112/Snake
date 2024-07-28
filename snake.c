@@ -16,27 +16,28 @@ void SetUp(enum Cells *field, const size_t size) {
 }
 
 void Draw(enum Cells *field, const size_t size) {
+    move(0, 0);
     for (size_t i = 0; i < size; i++) {
         for (size_t j = 0; j < size; j++) {
             switch (field[i * size + j]) {
                 case Space:
-                    printf(" ");
+                    addch(' ');
                     break;
                 case Border:
-                    printf("#");
+                    addch('#');
                     break;
                 case Apple:
-                    printf("@");
+                    addch('@');
                     break;
                 case Snake:
-                    printf("0");
+                    addch('0');
                     break;
                 default:
-                    printf(" ");
+                    addch(' ');
                     break;
             }
         } 
-        printf("\n\r");
+        printw("\n\r");
     }
 }
 
@@ -73,9 +74,7 @@ void SnakeMove(enum Cells *field, const size_t size, int *Snakex, int *Snakey, e
 }
 
 void Input(enum Move *Snaked) {
-    initscr();
     char button = getch();
-    endwin();
     switch (button) {
         case 'a':
             *Snaked = Left;
