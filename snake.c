@@ -51,21 +51,21 @@ void NewApple(enum Cells *field, const size_t size, int *Applex, int *Appley) {
 }
 
 void SnakeMove(enum Cells *field, const size_t size, int *Snakex, int *Snakey, enum Move *Snaked) {
-    field[*Snakey * size + *Snakex] = Space;
+    field[(*Snakey) * size + (*Snakex)] = Space;
     switch (*Snaked) {
         case Stop:
             break;
         case Left:
-            *Snakex--;
+            (*Snakex)--;
             break;
         case Up:
-            *Snakey++;
+            (*Snakey)--;
             break;
         case Right:
-            *Snakex++;
+            (*Snakex)++;
             break;
         case Down:
-            *Snakey--;
+            (*Snakey)++;
             break;
         default:
             break;
