@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "snake.h"
 
-void SetUp(enum Cells *field, const size_t size) {
+void SetUp(enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple) {
     for (size_t i = 0; i < size; i++) {
         field[i]                     = Border;
         field[size * (size - 1) + i] = Border;
@@ -12,7 +12,13 @@ void SetUp(enum Cells *field, const size_t size) {
         field[i]            = Border;
         field[i + size - 1] = Border;
     }
-    field[(size / 2) * (size + 1)] = Snake;
+
+    NewApple(field, size, snake, apple);
+
+    snake->Snakex = size / 2;
+    snake->Snakey = size / 2;
+    snake->Snaked = Stop;
+    field[snake->Snakey * size + snake->Snakey] = Snake;
 }
 
 void Draw(enum Cells *field, const size_t size) {
@@ -41,54 +47,66 @@ void Draw(enum Cells *field, const size_t size) {
     }
 }
 
-void NewApple(enum Cells *field, const size_t size, int *Applex, int *Appley) {
-    field[*Appley * size + *Applex] = Space;
+void NewApple(enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple) {
+    apple->Applex = 1 + rand() % (size - 2);
+    apple->Appley = 1 + rand() % (size - 2);
     
-    *Applex = 1 + rand() % (size - 2);
-    *Appley = 1 + rand() % (size - 2);
+    while (apple->Applex == snake->Snakex && apple->Appley == snake->Snakey) {
+        apple->Applex = 1 + rand() % (size - 2);
+        apple->Appley = 1 + rand() % (size - 2);
+    }
     
-    field[*Appley * size + *Applex] = Apple;
+    field[apple->Appley * size + apple->Applex] = Apple;
 }
 
-void SnakeMove(enum Cells *field, const size_t size, int *Snakex, int *Snakey, enum Move *Snaked) {
-    field[(*Snakey) * size + (*Snakex)] = Space;
-    switch (*Snaked) {
+void SnakeMove(enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple) {
+    field[(snake->Snakey) * size + (snake->Snakex)] = Space;
+    switch (snake->Snaked) {
         case Stop:
             break;
         case Left:
-            (*Snakex)--;
+            (snake->Snakex)--;
             break;
         case Up:
-            (*Snakey)--;
+            (snake->Snakey)--;
             break;
         case Right:
-            (*Snakex)++;
+            (snake->Snakex)++;
             break;
         case Down:
-            (*Snakey)++;
+            (snake->Snakey)++;
             break;
         default:
             break;
     }
-    field[*Snakey * size + *Snakex] = Snake;
+
+    Eat(field, size, snake, apple);
+
+    field[snake->Snakey * size + snake->Snakex] = Snake;
 }
 
-void Input(enum Move *Snaked) {
+void Input(struct Snake *snake) {
     char button = getch();
     switch (button) {
         case 'a':
-            *Snaked = Left;
+            snake->Snaked = Left;
             break;
         case 'w':
-            *Snaked = Up;
+            snake->Snaked = Up;
             break;
         case 'd':
-            *Snaked = Right;
+            snake->Snaked = Right;
             break;
         case 's':
-            *Snaked = Down;
+            snake->Snaked = Down;
             break;
         default:
             break;
+    }
+}
+
+void Eat(enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple) {
+    if (snake->Snakex == apple->Applex && snake->Snakey == apple->Appley) {
+        NewApple(field, size, snake, apple);
     }
 }

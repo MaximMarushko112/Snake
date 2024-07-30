@@ -13,19 +13,15 @@ int main() {
     enum Cells  *field = (enum Cells *) calloc(size * size, sizeof(char));
     assert(field != NULL);
 
-    int       Applex = 1;
-    int       Appley = 1;
-    int       Snakex = 10;
-    int       Snakey = 10;
-    enum Move Snaked = Stop;
+    struct Snake snake;
+    struct Apple apple;
     
     srand(34);
-    SetUp(field, size);
-    NewApple(field, size, &Applex, &Appley);
+    SetUp(field, size, &snake, &apple);
     Draw(field, size);
-    for (int i = 0; i < 10; i++) {
-        Input(&Snaked);
-        SnakeMove(field, size, &Snakex, &Snakey, &Snaked);
+    for (int i = 0; i < 20; i++) {
+        Input(&snake);
+        SnakeMove(field, size, &snake, &apple);
         Draw(field, size);
     }
     free(field);
