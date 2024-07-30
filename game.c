@@ -9,30 +9,33 @@ int main() {
     initscr();
     noecho();
     halfdelay(5);
-    const size_t size  = 20;
-    enum Cells  **field = (enum Cells **) calloc(size, sizeof(enum Cells *));
-    assert(field != NULL);
-    for (size_t i = 0; i < size; i++) {
-        field[i] = calloc(size, sizeof(enum Cells));
-        assert(field[i] != NULL);
+
+    struct Game game;
+    game.size = 20;
+    game.field = (enum Cells **) calloc(game.size, sizeof(enum Cells *));
+    assert(game.field != NULL);
+    for (size_t i = 0; i < game.size; i++) {
+        game.field[i] = calloc(game.size, sizeof(enum Cells));
+        assert(game.field[i] != NULL);
     }
+    game.score = 0;
+    game.status = Going;
 
     struct Snake snake;
     struct Apple apple;
-    int          score = 0;
     
     srand(34);
-    SetUp(field, size, &snake, &apple);
-    Draw(field, size, score);
+    SetUp(&game, &snake, &apple);
+    Draw(&game);
     for (int i = 0; i < 20; i++) {
         Input(&snake);
-        SnakeMove(field, size, &snake, &apple, &score);
-        Draw(field, size, score);
+        SnakeMove(&game, &snake, &apple);
+        Draw(&game);
     }
 
-    for (size_t i = 0; i < size; i++) {
-        free(field[i]);
+    for (size_t i = 0; i < game.size; i++) {
+        free(game.field[i]);
     }
-    free(field);
+    free(game.field);
     endwin();
 }
