@@ -19,7 +19,7 @@ void SetUp(enum Cells **field, const size_t size, struct Snake *snake, struct Ap
     field[snake->y][snake->x] = Snake;
 }
 
-void Draw(enum Cells **field, const size_t size) {
+void Draw(enum Cells **field, const size_t size, int score) {
     move(0, 0);
     for (size_t i = 0; i < size; i++) {
         for (size_t j = 0; j < size; j++) {
@@ -43,6 +43,7 @@ void Draw(enum Cells **field, const size_t size) {
         } 
         printw("\n\r");
     }
+    printw("Score: %d", score);
 }
 
 void NewApple(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple) {
@@ -57,7 +58,7 @@ void NewApple(enum Cells **field, const size_t size, struct Snake *snake, struct
     field[apple->y][apple->x] = Apple;
 }
 
-void SnakeMove(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple) {
+void SnakeMove(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple, int *score) {
     field[snake->y][snake->x] = Space;
     switch (snake->d) {
         case Stop:
@@ -78,7 +79,7 @@ void SnakeMove(enum Cells **field, const size_t size, struct Snake *snake, struc
             break;
     }
 
-    Eat(field, size, snake, apple);
+    Eat(field, size, snake, apple, score);
 
     field[snake->y][snake->x] = Snake;
 }
@@ -103,8 +104,9 @@ void Input(struct Snake *snake) {
     }
 }
 
-void Eat(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple) {
+void Eat(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple, int *score) {
     if (snake->x == apple->x && snake->y == apple->y) {
         NewApple(field, size, snake, apple);
+        (*score) += 10;
     }
 }

@@ -19,14 +19,15 @@ int main() {
 
     struct Snake snake;
     struct Apple apple;
+    int          score = 0;
     
     srand(34);
     SetUp(field, size, &snake, &apple);
-    Draw(field, size);
+    Draw(field, size, score);
     for (int i = 0; i < 20; i++) {
         Input(&snake);
-        SnakeMove(field, size, &snake, &apple);
-        Draw(field, size);
+        SnakeMove(field, size, &snake, &apple, &score);
+        Draw(field, size, score);
     }
 
     for (size_t i = 0; i < size; i++) {

@@ -27,7 +27,7 @@ struct Apple {
     int y;
 };
 
-void Draw     (enum Cells **field, const size_t size);
+void Draw     (enum Cells **field, const size_t size, int score);
 
 void Input    (struct Snake *snake);
 
@@ -35,8 +35,8 @@ void NewApple (enum Cells **field, const size_t size, struct Snake *snake, struc
 
 void SetUp    (enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple);
 
-void SnakeMove(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple);
+void SnakeMove(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple, int *score);
 
-void Eat      (enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple);
+void Eat      (enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple, int *score);
 
 #endif
