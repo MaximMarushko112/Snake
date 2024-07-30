@@ -17,26 +17,26 @@ enum Move {
 };
 
 struct Snake {
-    int Snakex;
-    int Snakey;
-    enum Move Snaked;
+    int x;
+    int y;
+    enum Move d;
 };
 
 struct Apple {
-    int Applex;
-    int Appley;
+    int x;
+    int y;
 };
 
-void Draw     (enum Cells *field, const size_t size);
+void Draw     (enum Cells **field, const size_t size);
 
 void Input    (struct Snake *snake);
 
-void NewApple (enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple);
+void NewApple (enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple);
 
-void SetUp    (enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple);
+void SetUp    (enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple);
 
-void SnakeMove(enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple);
+void SnakeMove(enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple);
 
-void Eat      (enum Cells *field, const size_t size, struct Snake *snake, struct Apple *apple);
+void Eat      (enum Cells **field, const size_t size, struct Snake *snake, struct Apple *apple);
 
 #endif
