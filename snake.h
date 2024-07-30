@@ -49,6 +49,6 @@ void SetUp    (struct Game *game, struct Snake *snake, struct Apple *apple);
 
 void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple);
 
-void Eat      (struct Game *game, struct Snake *snake, struct Apple *apple);
+void Overlay  (struct Game *game, struct Snake *snake, struct Apple *apple);
 
 #endif

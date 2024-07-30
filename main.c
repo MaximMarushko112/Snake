@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
 #include "snake.h"
 
@@ -9,6 +10,7 @@ int main() {
     initscr();
     noecho();
     halfdelay(5);
+    srand(time(NULL));
 
     struct Game game;
     game.size = 20;
@@ -24,14 +26,15 @@ int main() {
     struct Snake snake;
     struct Apple apple;
     
-    srand(34);
     SetUp(&game, &snake, &apple);
     Draw(&game);
-    for (int i = 0; i < 20; i++) {
+    while (game.status == Going) {
         Input(&snake);
         SnakeMove(&game, &snake, &apple);
         Draw(&game);
     }
+    halfdelay(30);
+    getch();
 
     for (size_t i = 0; i < game.size; i++) {
         free(game.field[i]);

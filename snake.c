@@ -43,7 +43,12 @@ void Draw(struct Game *game) {
         } 
         printw("\n\r");
     }
-    printw("Score: %d", game->score);
+    if (game->status == Going) {
+        printw("Score: %d", game->score);
+    }
+    else {
+        printw("GAME OVER!");
+    }
 }
 
 void NewApple(struct Game *game, struct Snake *snake, struct Apple *apple) {
@@ -79,9 +84,11 @@ void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
             break;
     }
 
-    Eat(game, snake, apple);
-
-    game->field[snake->y][snake->x] = Snake;
+    Overlay(game, snake, apple);
+    
+    if (game->status == Going) {
+        game->field[snake->y][snake->x] = Snake;
+    }
 }
 
 void Input(struct Snake *snake) {
@@ -104,9 +111,12 @@ void Input(struct Snake *snake) {
     }
 }
 
-void Eat(struct Game *game, struct Snake *snake, struct Apple *apple) {
+void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
     if (game->field[snake->y][snake->x] == Apple) {
         NewApple(game, snake, apple);
         game->score += 10;
+    }
+    else if (game->field[snake->y][snake->x] == Border) {
+        game->status = Over;
     }
 }
