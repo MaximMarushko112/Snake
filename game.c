@@ -13,7 +13,7 @@ int main() {
     enum Cells  **field = (enum Cells **) calloc(size, sizeof(enum Cells *));
     assert(field != NULL);
     for (size_t i = 0; i < size; i++) {
-        field[i] = calloc(size, sizeof(char));
+        field[i] = calloc(size, sizeof(enum Cells));
         assert(field[i] != NULL);
     }
 
