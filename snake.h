@@ -32,23 +32,44 @@ struct Apple {
     int y;
 };
 
+struct Window {
+    int row;
+    int col;
+};
 struct Game {
-    enum Cells **field;
-    size_t size;
-    int score;
-    enum Status status;
+    enum Cells  **field;
+    size_t        size;
+    int           score;
+    enum Status   status;
+    struct Window win;
 };
 
-void Draw     (struct Game *game);
+void BorderSetUp(struct Game *game);
 
-void Input    (struct Snake *snake);
+void ClearField (struct Game *game);
 
-void NewApple (struct Game *game, struct Snake *snake, struct Apple *apple);
+void DrawField  (struct Game *game);
 
-void SetUp    (struct Game *game, struct Snake *snake, struct Apple *apple);
+void Drawxy     (struct Game *game, int x, int y, enum Cells cell);
 
-void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple);
+void GameOver   (struct Game *game);
 
-void Overlay  (struct Game *game, struct Snake *snake, struct Apple *apple);
+void GameSetUp  (struct Game *game);
+
+void Input      (struct Snake *snake);
+
+void NewApple   (struct Game *game, struct Snake *snake, struct Apple *apple);
+
+void Overlay    (struct Game *game, struct Snake *snake, struct Apple *apple);
+
+void SetUp      (struct Game *game, struct Snake *snake, struct Apple *apple);
+
+void Settings   ();
+
+void SnakeMove  (struct Game *game, struct Snake *snake, struct Apple *apple);
+
+void SnakeSetUp (struct Game *game, struct Snake *snake);
+
+void SpaceSetUp (struct Game *game);
 
 #endif

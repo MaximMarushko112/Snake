@@ -1,48 +1,34 @@
+#include <assert.h>
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "snake.h"
 
+static const char game_over[] = "GAME OVER!";
+static const char score[] = "Score: ";
+static const int MaxSpeed = 400;
+
 void SetUp(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    for (size_t i = 1; i < game->size - 1; i++) {
-        for (size_t j = 1; j <= i; j++) {
-            game->field[i][j] = Space;
-            game->field[j][i] = Space;
-        }
-    }
+    Settings();
+    GameSetUp(game);
 
-    for (size_t i = 0; i < game->size; i++) {
-        game->field[0][i]              = Border;
-        game->field[game->size - 1][i] = Border;
-        game->field[i][0]              = Border;
-        game->field[i][game->size - 1] = Border;
-    }
-
-    snake->x = game->size / 2;
-    snake->y = game->size / 2;
-    snake->d = Stop;
-    game->field[snake->y][snake->x] = Snake;
-
+    SpaceSetUp(game);
+    BorderSetUp(game);
+    SnakeSetUp(game, snake);
     NewApple(game, snake, apple);
+
+    DrawField(game);
 }
 
-void Draw(struct Game *game) {
-    int winx, winy;
-    getmaxyx(stdscr, winy, winx);
-
-    if (game->status == Going) {
-        for (size_t i = 0; i < game->size; i++) {
-            move(winy/2 - game->size/2 + i, winx/2 - game->size/2);
-            for (size_t j = 0; j < game->size; j++) {
-                addch(game->field[i][j]);
-            } 
-        }
-        mvprintw(winy/2 + game->size/2, winx/2 - game->size/2, "Score: %d", game->score);
-    }
-    else {
-        char game_over[] = "GAME OVER!";
-        mvprintw(winy/2, winx/2 - strlen(game_over)/2, "%s", game_over);
+void DrawField(struct Game *game) {
+    for (size_t i = 0; i < game->size; i++) {
+        move(game->win.row/2 - game->size/2 + i, game->win.col/2 - game->size/2);
+        for (size_t j = 0; j < game->size; j++) {
+            addch(game->field[i][j]);
+        } 
+        mvprintw(game->win.row/2 + game->size/2, game->win.col/2 - game->size/2, "%s%d", score, game->score);
     }
 }
 
@@ -50,16 +36,17 @@ void NewApple(struct Game *game, struct Snake *snake, struct Apple *apple) {
     apple->x = 1 + rand() % (game->size - 2);
     apple->y = 1 + rand() % (game->size - 2);
     
-    while (apple->x == snake->x && apple->y == snake->y) {
+    while (game->field[apple->y][apple->x] == Snake) {
         apple->x = 1 + rand() % (game->size - 2);
         apple->y = 1 + rand() % (game->size - 2);
     }
     
-    game->field[apple->y][apple->x] = Apple;
+    Drawxy(game, apple->x, apple->y, Apple);
 }
 
 void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    game->field[snake->y][snake->x] = Space;
+    Drawxy(game, snake->x, snake->y, Space);
+    
     switch (snake->d) {
         case Stop:
             break;
@@ -80,14 +67,11 @@ void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
     }
 
     Overlay(game, snake, apple);
-    
-    if (game->status == Going) {
-        game->field[snake->y][snake->x] = Snake;
-    }
 }
 
 void Input(struct Snake *snake) {
     int button = getch();
+    
     switch (button) {
         case KEY_LEFT:
         case 'a':
@@ -111,12 +95,98 @@ void Input(struct Snake *snake) {
 }
 
 void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    if (game->field[snake->y][snake->x] == Apple) {
-        NewApple(game, snake, apple);
-        game->score += 10;
-        timeout(400 - game->score);
+    if (game->field[snake->y][snake->x] != Border) {
+        Drawxy(game, snake->x, snake->y, Snake);
+        
+        if (game->field[apple->y][apple->x] == Snake) {
+            NewApple(game, snake, apple);
+            
+            game->score += 10;
+            mvprintw(game->win.row/2 + game->size/2, game->win.col/2 - game->size/2, "%s%d", score, game->score);
+            
+            timeout(MaxSpeed - game->score);
+        }
     }
-    else if (game->field[snake->y][snake->x] == Border) {
+    else {
         game->status = Over;
     }
+}
+
+void SpaceSetUp (struct Game *game) {
+    for (size_t i = 1; i < game->size - 1; i++) {
+        for (size_t j = 1; j <= i; j++) {
+            game->field[i][j] = Space;
+            game->field[j][i] = Space;
+        }
+    }
+}
+
+void BorderSetUp(struct Game *game) {
+    for (size_t i = 0; i < game->size; i++) {
+        game->field[0][i]              = Border;
+        game->field[game->size - 1][i] = Border;
+        game->field[i][0]              = Border;
+        game->field[i][game->size - 1] = Border;
+    }
+}
+
+void SnakeSetUp (struct Game *game, struct Snake *snake) {
+    snake->x = game->size / 2;
+    snake->y = game->size / 2;
+    snake->d = Stop;
+    game->field[snake->y][snake->x] = Snake;
+}
+
+void GameSetUp  (struct Game *game) {
+    game->size = 20;
+    
+    game->field = (enum Cells **) calloc(game->size, sizeof(enum Cells *));
+    assert(game->field != NULL);
+    for (size_t i = 0; i < game->size; i++) {
+        game->field[i] = calloc(game->size, sizeof(enum Cells));
+        assert(game->field[i] != NULL);
+    }
+    
+    game->score = 0;
+    game->status = Going;
+    getmaxyx(stdscr, game->win.row, game->win.col);
+}
+
+void Drawxy(struct Game *game, int x, int y, enum Cells cell) {
+    game->field[y][x] = cell;
+    move(game->win.row/2 - game->size/2 + y, game->win.col/2 - game->size/2 + x);
+    assert(y < game->size && x < game->size);
+    addch(game->field[y][x]);
+}
+
+void ClearField (struct Game *game) {
+    for (size_t i = 0; i < game->size; i++) {
+        for (size_t j = 0; j < game->size; j++) {
+            game->field[i][j] = Space;
+        }    
+    }
+}
+
+void GameOver   (struct Game *game) {
+    ClearField(game);
+    DrawField (game);
+    mvprintw(game->win.row/2 + game->size/2, game->win.col/2 - game->size/2, "               ");
+
+    mvprintw(game->win.row/2, game->win.col/2 - strlen(game_over)/2, "%s", game_over);
+    mvprintw(game->win.row/2 + 1, game->win.col/2 - strlen(game_over)/2, "%s%d", score, game->score);
+
+    timeout(-1);
+    getch();
+
+    for (size_t i = 0; i < game->size; i++) {
+        free(game->field[i]);
+    }
+    free(game->field);
+}
+
+void Settings() {
+    noecho();
+    timeout(MaxSpeed);
+    keypad(stdscr, TRUE);
+    srand(time(NULL));
 }

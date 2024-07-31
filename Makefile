@@ -1,7 +1,7 @@
 all: game
 
 game: main.o snake.o
-	gcc main.o snake.o -o game -lncurses
+	gcc snake.o main.o -o game -lncurses
 
 main.o: main.c
 	gcc -c main.c 
