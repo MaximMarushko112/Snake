@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "snake.h"
 
 void SetUp(struct Game *game, struct Snake *snake, struct Apple *apple) {
@@ -20,34 +21,37 @@ void SetUp(struct Game *game, struct Snake *snake, struct Apple *apple) {
 }
 
 void Draw(struct Game *game) {
-    move(0, 0);
-    for (size_t i = 0; i < game->size; i++) {
-        for (size_t j = 0; j < game->size; j++) {
-            switch (game->field[i][j]) {
-                case Space:
-                    addch(' ');
-                    break;
-                case Border:
-                    addch('#');
-                    break;
-                case Apple:
-                    addch('@');
-                    break;
-                case Snake:
-                    addch('0');
-                    break;
-                default:
-                    addch(' ');
-                    break;
-            }
-        } 
-        printw("\n\r");
-    }
+    int winx, winy;
+    getmaxyx(stdscr, winy, winx);
+
     if (game->status == Going) {
-        printw("Score: %d", game->score);
+        for (size_t i = 0; i < game->size; i++) {
+            move(winy/2 - game->size/2 + i, winx/2 - game->size/2);
+            for (size_t j = 0; j < game->size; j++) {
+                switch (game->field[i][j]) {
+                    case Space:
+                        addch(' ');
+                        break;
+                    case Border:
+                        addch('#');
+                        break;
+                    case Apple:
+                        addch('@');
+                        break;
+                    case Snake:
+                        addch('0');
+                        break;
+                    default:
+                        addch(' ');
+                        break;
+                }
+            } 
+        }
+        mvprintw(winy/2 + game->size/2, winx/2 - game->size/2, "Score: %d", game->score);
     }
     else {
-        printw("GAME OVER!");
+        char game_over[] = "GAME OVER!";
+        mvprintw(winy/2, winx/2 - strlen(game_over)/2, "%s", game_over);
     }
 }
 
