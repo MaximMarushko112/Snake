@@ -115,6 +115,7 @@ void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
     if (game->field[snake->y][snake->x] == Apple) {
         NewApple(game, snake, apple);
         game->score += 10;
+        timeout(400 - game->score);
     }
     else if (game->field[snake->y][snake->x] == Border) {
         game->status = Over;

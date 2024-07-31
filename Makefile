@@ -1,10 +1,10 @@
-all: game.exe
+all: game
 
-game.exe: game.o snake.o
-	gcc game.o snake.o -o game.exe -lncurses
+game: main.o snake.o
+	gcc main.o snake.o -o game -lncurses
 
-game.o: game.c
-	gcc -c game.c 
+main.o: main.c
+	gcc -c main.c 
 
 snake.o: snake.c snake.h
 	gcc -c snake.c -lncurses

@@ -9,7 +9,7 @@
 int main() {
     initscr();
     noecho();
-    halfdelay(5);
+    timeout(400);
     srand(time(NULL));
 
     struct Game game;
@@ -33,7 +33,7 @@ int main() {
         SnakeMove(&game, &snake, &apple);
         Draw(&game);
     }
-    halfdelay(30);
+    timeout(-1);
     getch();
 
     for (size_t i = 0; i < game.size; i++) {
