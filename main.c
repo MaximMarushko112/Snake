@@ -10,6 +10,7 @@ int main() {
     initscr();
     noecho();
     timeout(400);
+    keypad(stdscr, TRUE);
     srand(time(NULL));
 
     struct Game game;

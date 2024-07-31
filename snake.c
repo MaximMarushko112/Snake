@@ -5,6 +5,13 @@
 #include "snake.h"
 
 void SetUp(struct Game *game, struct Snake *snake, struct Apple *apple) {
+    for (size_t i = 1; i < game->size - 1; i++) {
+        for (size_t j = 1; j <= i; j++) {
+            game->field[i][j] = Space;
+            game->field[j][i] = Space;
+        }
+    }
+
     for (size_t i = 0; i < game->size; i++) {
         game->field[0][i]              = Border;
         game->field[game->size - 1][i] = Border;
@@ -12,12 +19,12 @@ void SetUp(struct Game *game, struct Snake *snake, struct Apple *apple) {
         game->field[i][game->size - 1] = Border;
     }
 
-    NewApple(game, snake, apple);
-
     snake->x = game->size / 2;
     snake->y = game->size / 2;
     snake->d = Stop;
     game->field[snake->y][snake->x] = Snake;
+
+    NewApple(game, snake, apple);
 }
 
 void Draw(struct Game *game) {
@@ -28,23 +35,7 @@ void Draw(struct Game *game) {
         for (size_t i = 0; i < game->size; i++) {
             move(winy/2 - game->size/2 + i, winx/2 - game->size/2);
             for (size_t j = 0; j < game->size; j++) {
-                switch (game->field[i][j]) {
-                    case Space:
-                        addch(' ');
-                        break;
-                    case Border:
-                        addch('#');
-                        break;
-                    case Apple:
-                        addch('@');
-                        break;
-                    case Snake:
-                        addch('0');
-                        break;
-                    default:
-                        addch(' ');
-                        break;
-                }
+                addch(game->field[i][j]);
             } 
         }
         mvprintw(winy/2 + game->size/2, winx/2 - game->size/2, "Score: %d", game->score);
@@ -96,17 +87,21 @@ void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
 }
 
 void Input(struct Snake *snake) {
-    char button = getch();
+    int button = getch();
     switch (button) {
+        case KEY_LEFT:
         case 'a':
             snake->d = Left;
             break;
+        case KEY_UP:
         case 'w':
             snake->d = Up;
             break;
+        case KEY_RIGHT:
         case 'd':
             snake->d = Right;
             break;
+        case KEY_DOWN:
         case 's':
             snake->d = Down;
             break;

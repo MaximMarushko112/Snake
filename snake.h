@@ -7,10 +7,10 @@ enum Status {
 };
 
 enum Cells {
-    Space,
-    Border,
-    Apple,
-    Snake
+    Space  = ' ',
+    Border = '#',
+    Apple  = '@',
+    Snake  = '0'
 };
 
 enum Move {
