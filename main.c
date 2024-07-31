@@ -6,8 +6,6 @@
 #include "snake.h"
 
 int main() {
-    initscr();
-
     struct Game game;
     struct Snake snake;
     struct Apple apple;
@@ -18,5 +16,4 @@ int main() {
         SnakeMove(&game, &snake, &apple);
     }
     GameOver(&game);
-    endwin();
 }

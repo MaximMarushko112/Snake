@@ -52,6 +52,8 @@ void DrawField  (struct Game *game);
 
 void Drawxy     (struct Game *game, int x, int y, enum Cells cell);
 
+void Eat        (struct Game *game, struct Snake *snake, struct Apple *apple);
+
 void GameOver   (struct Game *game);
 
 void GameSetUp  (struct Game *game);
@@ -71,5 +73,7 @@ void SnakeMove  (struct Game *game, struct Snake *snake, struct Apple *apple);
 void SnakeSetUp (struct Game *game, struct Snake *snake);
 
 void SpaceSetUp (struct Game *game);
+
+void TheEnd     (struct Game *game);
 
 #endif
