@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include "snake.h"
+#include "snake_graphics.h"
+#include "snake_input.h"
+#include "snake_logic.h"
 
 int main() {
     struct Game game;
