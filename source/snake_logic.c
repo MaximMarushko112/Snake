@@ -2,8 +2,8 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>
-#include "snake_graphics.h"
-#include "snake_logic.h"
+#include "../include/snake_graphics.h"
+#include "../include/snake_logic.h"
 
 static const char score[] = "Score: ";
 static const int MaxSpeed = 400;

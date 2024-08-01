@@ -1,6 +1,6 @@
 #include <ncurses.h>
-#include "snake_input.h"
-#include "snake_logic.h"
+#include "../include/snake_input.h"
+#include "../include/snake_logic.h"
 
 void Input(struct Snake *snake) {
     int button = getch();
