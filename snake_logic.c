@@ -42,22 +42,22 @@ void GameSetUp  (struct Game *game) {
 }
 
 void NewApple(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    apple->x = 1 + rand() % (game->size - 2);
-    apple->y = 1 + rand() % (game->size - 2);
+    apple->cell.x = 1 + rand() % (game->size - 2);
+    apple->cell.y = 1 + rand() % (game->size - 2);
     
-    while (game->field[apple->y][apple->x] == Snake) {
-        apple->x = 1 + rand() % (game->size - 2);
-        apple->y = 1 + rand() % (game->size - 2);
+    while (game->field[apple->cell.y][apple->cell.x] == Snake) {
+        apple->cell.x = 1 + rand() % (game->size - 2);
+        apple->cell.y = 1 + rand() % (game->size - 2);
     }
     
-    Drawxy(game, apple->x, apple->y, Apple);
+    Drawxy(game, apple->cell.x, apple->cell.y, Apple);
 }
 
 void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    if (game->field[snake->y][snake->x] != Border) {
-        Drawxy(game, snake->x, snake->y, Snake);
+    if (game->field[snake->cell.y][snake->cell.x] != Border) {
+        Drawxy(game, snake->cell.x, snake->cell.y, Snake);
         
-        if (game->field[apple->y][apple->x] == Snake) 
+        if (game->field[apple->cell.y][apple->cell.x] == Snake) 
             Eat(game, snake, apple);
     }
     else {
@@ -86,22 +86,22 @@ void Settings() {
 }
 
 void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    Drawxy(game, snake->x, snake->y, Space);
+    Drawxy(game, snake->cell.x, snake->cell.y, Space);
     
     switch (snake->d) {
         case Stop:
             break;
         case Left:
-            (snake->x)--;
+            (snake->cell.x)--;
             break;
         case Up:
-            (snake->y)--;
+            (snake->cell.y)--;
             break;
         case Right:
-            (snake->x)++;
+            (snake->cell.x)++;
             break;
         case Down:
-            (snake->y)++;
+            (snake->cell.y)++;
             break;
         default:
             break;
@@ -111,11 +111,11 @@ void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
 }
 
 void SnakeSetUp (struct Game *game, struct Snake *snake) {
-    snake->x = game->size / 2;
-    snake->y = game->size / 2;
+    snake->cell.x = game->size / 2;
+    snake->cell.y = game->size / 2;
     snake->d = Stop;
     
-    game->field[snake->y][snake->x] = Snake;
+    game->field[snake->cell.y][snake->cell.x] = Snake;
 }
 
 void SpaceSetUp (struct Game *game) {

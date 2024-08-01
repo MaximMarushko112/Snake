@@ -23,15 +23,18 @@ enum Move {
     Down
 };
 
-struct Snake {
+struct Cell {
     int x;
     int y;
+};
+
+struct Snake {
+    struct Cell cell;
     enum Move d;
 };
 
 struct Apple {
-    int x;
-    int y;
+    struct Cell cell;
 };
 
 struct Window {
