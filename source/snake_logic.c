@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>
+#include "../include/simple_list.h"
 #include "../include/snake_graphics.h"
 #include "../include/snake_logic.h"
 
@@ -54,11 +55,16 @@ void NewApple(struct Game *game, struct Snake *snake, struct Apple *apple) {
 }
 
 void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    if (game->field[snake->cell.y][snake->cell.x] != Border) {
-        Drawxy(game, snake->cell.x, snake->cell.y, Snake);
+    if (game->field[snake->body->head->data.y][snake->body->head->data.x] != Border &&
+        game->field[snake->body->head->data.y][snake->body->head->data.x] != Snake) {
+        Drawxy(game, snake->body->head->data.x, snake->body->head->data.y, Snake);
         
         if (game->field[apple->cell.y][apple->cell.x] == Snake) 
             Eat(game, snake, apple);
+        else {
+            Drawxy(game, snake->body->tail->data.x, snake->body->tail->data.y, Space);
+            PopTail(snake->body, NULL);
+        }
     }
     else {
         game->status = Over;
@@ -86,36 +92,41 @@ void Settings() {
 }
 
 void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    Drawxy(game, snake->cell.x, snake->cell.y, Space);
-    
+    struct Cell *new_head = (struct Cell *) calloc(1, sizeof(struct Cell));
+    *new_head = snake->body->head->data;
+
     switch (snake->d) {
         case Stop:
             break;
         case Left:
-            (snake->cell.x)--;
+            (new_head->x)--;
             break;
         case Up:
-            (snake->cell.y)--;
+            (new_head->y)--;
             break;
         case Right:
-            (snake->cell.x)++;
+            (new_head->x)++;
             break;
         case Down:
-            (snake->cell.y)++;
+            (new_head->y)++;
             break;
         default:
             break;
     }
 
-    Overlay(game, snake, apple);
+    if (snake->d != Stop) {
+        PushHead(snake->body, new_head);
+
+        Overlay(game, snake, apple);
+    }
 }
 
 void SnakeSetUp (struct Game *game, struct Snake *snake) {
-    snake->cell.x = game->size / 2;
-    snake->cell.y = game->size / 2;
+    snake->body = CreateList();
+    struct Cell snake_start = {game->size / 2, game->size / 2};
+    PushHead(snake->body, &snake_start);
     snake->d = Stop;
-    
-    game->field[snake->cell.y][snake->cell.x] = Snake;
+    game->field[snake->body->head->data.y][snake->body->head->data.x] = Snake;
 }
 
 void SpaceSetUp (struct Game *game) {

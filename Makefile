@@ -8,8 +8,8 @@ SRC = ./source
 
 override CFLAGS += $(COMMONINC)
 
-CSRC = main.c source/snake_graphics.c source/snake_input.c source/snake_logic.c
-COBJ = main.o snake_graphics.o snake_input.o snake_logic.o 
+CSRC = main.c source/simple_list.c source/snake_graphics.c source/snake_input.c source/snake_logic.c
+COBJ = main.o simple_list.o snake_graphics.o snake_input.o snake_logic.o 
 
 %.o: source/%.c
 	$(CC) $(CFLAGS) -c $^ -o $@

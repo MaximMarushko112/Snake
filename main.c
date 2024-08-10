@@ -17,5 +17,5 @@ int main() {
         Input(&snake);
         SnakeMove(&game, &snake, &apple);
     }
-    GameOver(&game);
+    GameOver(&game, &snake);
 }

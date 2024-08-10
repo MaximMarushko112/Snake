@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <ncurses.h>
 #include <string.h>
+#include "../include/simple_list.h"
 #include "../include/snake_graphics.h"
 #include "../include/snake_logic.h"
 
@@ -33,7 +34,7 @@ void Drawxy(struct Game *game, int x, int y, enum Cells cell) {
     addch(game->field[y][x]);
 }
 
-void GameOver   (struct Game *game) {
+void GameOver(struct Game *game, struct Snake *snake) {
     ClearField(game);
     DrawField (game);
     mvprintw(game->win.row/2 + game->size/2, game->win.col/2 - game->size/2, "               ");
@@ -44,14 +45,16 @@ void GameOver   (struct Game *game) {
     timeout(-1);
     getch();
 
-    TheEnd(game);
+    TheEnd(game, snake);
 }
 
-void TheEnd (struct Game *game) {
+void TheEnd (struct Game *game, struct Snake *snake) {
     for (size_t i = 0; i < game->size; i++) {
         free(game->field[i]);
     }
     free(game->field);
+
+    FreeList(snake->body);
 
     endwin();
 }

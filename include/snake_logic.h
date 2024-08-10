@@ -2,53 +2,7 @@
 #define SNAKE_LOGIC_H
 
 #include <stdlib.h>
-
-enum Status {
-    Over,
-    Going
-};
-
-enum Cells {
-    Space  = ' ',
-    Border = '#',
-    Apple  = '@',
-    Snake  = '0'
-};
-
-enum Move {
-    Stop,
-    Left,
-    Up,
-    Right,
-    Down
-};
-
-struct Cell {
-    int x;
-    int y;
-};
-
-struct Snake {
-    struct Cell cell;
-    enum Move d;
-};
-
-struct Apple {
-    struct Cell cell;
-};
-
-struct Window {
-    int row;
-    int col;
-};
-
-struct Game {
-    enum Cells  **field;
-    size_t        size;
-    int           score;
-    enum Status   status;
-    struct Window win;
-};
+#include "data_types.h"
 
 void BorderSetUp (struct Game *game);
 

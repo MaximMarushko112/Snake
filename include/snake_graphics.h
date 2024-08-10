@@ -9,8 +9,8 @@ void DrawField  (struct Game *game);
 
 void Drawxy     (struct Game *game, int x, int y, enum Cells cell);
 
-void GameOver   (struct Game *game);
+void GameOver   (struct Game *game, struct Snake *snake);
 
-void TheEnd     (struct Game *game);
+void TheEnd     (struct Game *game, struct Snake *snake);
 
 #endif
