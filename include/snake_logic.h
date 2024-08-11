@@ -12,6 +12,8 @@ void GameSetUp   (struct Game *game);
 
 void NewApple    (struct Game *game, struct Snake *snake, struct Apple *apple);
 
+struct Cell *NewSnakeHead(struct Snake *snake);
+
 void Overlay     (struct Game *game, struct Snake *snake, struct Apple *apple);
 
 void SetUp       (struct Game *game, struct Snake *snake, struct Apple *apple);

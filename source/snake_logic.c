@@ -7,7 +7,7 @@
 #include "../include/snake_logic.h"
 
 static const char score[] = "Score: ";
-static const int MaxSpeed = 400;
+static const int MaxSpeed = 320;
 
 void BorderSetUp(struct Game *game) {
     for (size_t i = 0; i < game->size; i++) {
@@ -23,8 +23,6 @@ void Eat(struct Game *game, struct Snake *snake, struct Apple *apple) {
             
     game->score += 10;
     mvprintw(game->win.row/2 + game->size/2, game->win.col/2 - game->size/2, "%s%d", score, game->score);
-            
-    timeout(MaxSpeed - game->score);
 }
 
 void GameSetUp  (struct Game *game) {
@@ -54,9 +52,36 @@ void NewApple(struct Game *game, struct Snake *snake, struct Apple *apple) {
     Drawxy(game, apple->cell.x, apple->cell.y, Apple);
 }
 
+struct Cell *NewSnakeHead(struct Snake *snake) {
+    struct Cell *new_head = (struct Cell *) calloc(1, sizeof(struct Cell));
+    *new_head = snake->body->head->data;
+
+    switch (snake->d) {
+        case Stop:
+            break;
+        case Left:
+            (new_head->x)--;
+            break;
+        case Up:
+            (new_head->y)--;
+            break;
+        case Right:
+            (new_head->x)++;
+            break;
+        case Down:
+            (new_head->y)++;
+            break;
+        default:
+            break;
+    }
+
+    return new_head;
+}
+
 void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
     if (game->field[snake->body->head->data.y][snake->body->head->data.x] != Border &&
         game->field[snake->body->head->data.y][snake->body->head->data.x] != Snake) {
+        
         Drawxy(game, snake->body->head->data.x, snake->body->head->data.y, Snake);
         
         if (game->field[apple->cell.y][apple->cell.x] == Snake) 
@@ -92,27 +117,7 @@ void Settings() {
 }
 
 void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    struct Cell *new_head = (struct Cell *) calloc(1, sizeof(struct Cell));
-    *new_head = snake->body->head->data;
-
-    switch (snake->d) {
-        case Stop:
-            break;
-        case Left:
-            (new_head->x)--;
-            break;
-        case Up:
-            (new_head->y)--;
-            break;
-        case Right:
-            (new_head->x)++;
-            break;
-        case Down:
-            (new_head->y)++;
-            break;
-        default:
-            break;
-    }
+    struct Cell *new_head = NewSnakeHead(snake);
 
     if (snake->d != Stop) {
         PushHead(snake->body, new_head);
@@ -123,9 +128,12 @@ void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
 
 void SnakeSetUp (struct Game *game, struct Snake *snake) {
     snake->body = CreateList();
+    
     struct Cell snake_start = {game->size / 2, game->size / 2};
     PushHead(snake->body, &snake_start);
+    
     snake->d = Stop;
+    
     game->field[snake->body->head->data.y][snake->body->head->data.x] = Snake;
 }
 
