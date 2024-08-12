@@ -19,6 +19,7 @@ void BorderSetUp(struct Game *game) {
 }
 
 void Eat(struct Game *game, struct Snake *snake, struct Apple *apple) {
+    game->field[snake->body->tail->data.y][snake->body->tail->data.x] = Snake;
     NewApple(game, snake, apple);
             
     game->score += 10;
@@ -83,7 +84,7 @@ void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
     if (game->field[snake->body->head->data.y][snake->body->head->data.x] != Border &&
         game->field[snake->body->head->data.y][snake->body->head->data.x] != Snake) {
         
-        Drawxy(game, snake->body->head->data.x, snake->body->head->data.y, Snake);
+        game->field[snake->body->head->data.y][snake->body->head->data.x] = Snake;
         
         if (game->field[apple->cell.y][apple->cell.x] == Snake) 
             Eat(game, snake, apple);
@@ -91,6 +92,7 @@ void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
             Drawxy(game, snake->body->tail->data.x, snake->body->tail->data.y, Space);
             PopTail(snake->body, NULL);
         }
+        Drawxy(game, snake->body->head->data.x, snake->body->head->data.y, Snake);
     }
     else {
         game->status = Over;
@@ -122,7 +124,7 @@ void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
 
     if (snake->d != Stop) {
         PushHead(snake->body, new_head);
-
+        game->field[snake->body->tail->data.y][snake->body->tail->data.x] = Space;
         Overlay(game, snake, apple);
     }
 }
