@@ -10,6 +10,8 @@ void Eat         (struct Game *game, struct Snake *snake, struct Apple *apple);
 
 void GameSetUp   (struct Game *game);
 
+char IsObstacle  (struct Game *game, struct Snake *snake);
+
 void NewApple    (struct Game *game, struct Snake *snake, struct Apple *apple);
 
 struct Cell *NewSnakeHead(struct Snake *snake);

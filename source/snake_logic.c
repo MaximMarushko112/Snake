@@ -19,7 +19,6 @@ void BorderSetUp(struct Game *game) {
 }
 
 void Eat(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    game->field[snake->body->tail->data.y][snake->body->tail->data.x] = Snake;
     NewApple(game, snake, apple);
             
     game->score += 10;
@@ -40,6 +39,19 @@ void GameSetUp  (struct Game *game) {
     }
     
     getmaxyx(stdscr, game->win.row, game->win.col);
+}
+
+char IsObstacle  (struct Game *game, struct Snake *snake) {
+    game->field[snake->body->tail->data.y][snake->body->tail->data.x] = Space;
+    
+    if (game->field[snake->body->head->data.y][snake->body->head->data.x] == Border ||
+        game->field[snake->body->head->data.y][snake->body->head->data.x] == Snake)
+        return 1;
+    
+    game->field[snake->body->head->data.y][snake->body->head->data.x] = Snake;
+    game->field[snake->body->tail->data.y][snake->body->tail->data.x] = Snake;
+    
+    return 0;
 }
 
 void NewApple(struct Game *game, struct Snake *snake, struct Apple *apple) {
@@ -81,17 +93,15 @@ struct Cell *NewSnakeHead(struct Snake *snake) {
 }
 
 void Overlay(struct Game *game, struct Snake *snake, struct Apple *apple) {
-    if (game->field[snake->body->head->data.y][snake->body->head->data.x] != Border &&
-        game->field[snake->body->head->data.y][snake->body->head->data.x] != Snake) {
-        
-        game->field[snake->body->head->data.y][snake->body->head->data.x] = Snake;
-        
+    if (!IsObstacle(game, snake)) {
         if (game->field[apple->cell.y][apple->cell.x] == Snake) 
             Eat(game, snake, apple);
+        
         else {
             Drawxy(game, snake->body->tail->data.x, snake->body->tail->data.y, Space);
             PopTail(snake->body, NULL);
         }
+        
         Drawxy(game, snake->body->head->data.x, snake->body->head->data.y, Snake);
     }
     else {
@@ -124,7 +134,7 @@ void SnakeMove(struct Game *game, struct Snake *snake, struct Apple *apple) {
 
     if (snake->d != Stop) {
         PushHead(snake->body, new_head);
-        game->field[snake->body->tail->data.y][snake->body->tail->data.x] = Space;
+        
         Overlay(game, snake, apple);
     }
 }
