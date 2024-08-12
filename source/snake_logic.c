@@ -28,6 +28,7 @@ void Eat(struct Game *game, struct Snake *snake, struct Apple *apple) {
 void GameSetUp  (struct Game *game) {
     game->size   = 20;
     game->score  = 0;
+    game->delay  = MaxSpeed;
     game->status = Going;
     
     game->field = (enum Cells **) calloc(game->size, sizeof(enum Cells *));

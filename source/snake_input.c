@@ -2,7 +2,7 @@
 #include "../include/snake_input.h"
 #include "../include/snake_logic.h"
 
-void Input(struct Snake *snake) {
+void Input(struct Game *game, struct Snake *snake) {
     int button = getch();
     
     switch (button) {
@@ -22,7 +22,19 @@ void Input(struct Snake *snake) {
         case 's':
             snake->d = Down;
             break;
+        case 'p':
+            Pause(game);
+            break;
         default:
             break;
     }
+}
+
+void Pause(struct Game *game) {
+    timeout(-1);
+    int button = 0;
+    while ((button = getch()) != 'p') {
+
+    }
+    timeout(game->delay);
 }

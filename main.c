@@ -14,7 +14,7 @@ int main() {
     
     SetUp(&game, &snake, &apple);
     while (game.status == Going) {
-        Input(&snake);
+        Input(&game, &snake);
         SnakeMove(&game, &snake, &apple);
     }
     GameOver(&game, &snake);

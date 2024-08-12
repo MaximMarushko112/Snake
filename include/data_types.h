@@ -28,6 +28,7 @@ struct Window {
 struct Game {
     enum Cells  **field;
     size_t        size;
+    int           delay;
     int           score;
     enum Status   status;
     struct Window win;

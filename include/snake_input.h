@@ -3,6 +3,8 @@
 
 #include "snake_logic.h"
 
-void Input (struct Snake *snake);
+void Input (struct Game *game, struct Snake *snake);
+
+void Pause (struct Game *game);
 
 #endif
